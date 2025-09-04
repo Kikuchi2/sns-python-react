@@ -23,16 +23,16 @@ ENV/
 
 # --- Django ---
 # 開発用SQLite（使っている場合のみ）
-backend/db.sqlite3
+db.sqlite3
 
 # collectstatic の出力先（本番用出力はコミットしない）
-backend/staticfiles/
+staticfiles/
 
 # ユーザーアップロード（本番は外部ストレージ推奨）
-backend/media/
+media/
 
 # 個人・ローカル設定（分割している場合）
-backend/config/settings/local.py
+config/settings/local.py
 
 # ※ 重要: マイグレーションはコミットするので除外しない
 # backend/**/migrations/ は除外しない
