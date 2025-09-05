@@ -6,7 +6,7 @@ module.exports = {
   parserOptions: {
     ecmaVersion: "latest",
     sourceType: "module",
-    project: "./tsconfig.json",
+    project: ["./tsconfig.json", './tsconfig.node.json'],
     tsconfigRootDir: __dirname,
   },
   settings: {
@@ -28,6 +28,9 @@ module.exports = {
     "import/prefer-default-export": "off",
     "react/jsx-props-no-spreading": "off",
     "@typescript-eslint/consistent-type-imports": ["warn", { prefer: "type-imports" }],
+    'import/no-extraneous-dependencies': ['error', {
+      devDependencies: ['vite.config.*', '**/*.config.*', '**/*.test.*', '**/*.spec.*']
+    }],
   },
   ignorePatterns: ["dist", "dist-ssr", "node_modules"],
 };
