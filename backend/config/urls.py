@@ -1,22 +1,24 @@
-"""
-URL configuration for config project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
+# backend/config/urls.py
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include, re_path
+from django.views.generic import TemplateView
+from django.conf import settings
+from django.views.static import serve as static_serve  # これを使って順序を制御
+# from django.conf.urls.static import static  # ← 今回は使わない
 
-urlpatterns = [
-    path('admin/', admin.site.urls),
-]
+asset_patterns = []
+if settings.DEBUG:
+    # /assets/** を最優先でマッチさせる（キャッチオールより前！）
+    asset_patterns = [
+        path("assets/<path:path>", static_serve, {"document_root": settings.VITE_ASSETS}),
+    ]
+
+urlpatterns = (
+    asset_patterns
+    + [
+        path("admin/", admin.site.urls),
+        path("api/", include("api.urls")),
+        # /api/ と /assets/ を除外して、それ以外は全部 SPA の index.html
+        re_path(r"^(?!api/|assets/).*$", TemplateView.as_view(template_name="index.html")),
+    ]
+)
