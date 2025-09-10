@@ -1,9 +1,11 @@
-// import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from "/vite.svg";
-import './App.css'
-import { PostCard } from './components/PostCard'
+import "./App.css";
+import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
+import Sidebar from "./components/Sidebar";
+import HomeFeed from "./pages/HomeFeed";
+import LoginPage from "./pages/LoginPage";
+import ProfileEditPage from "./pages/ProfileEditPage";
 
+// 既存の PostCard は HomeFeed 内で使います
 
 const posts = [
   {
@@ -42,104 +44,52 @@ const posts = [
     likes: 15,
     comments: 4,
   },
-  {
-    id: "4",
-    title: "Vite のホットリロードが急に動いた理由メモ",
-    body:
-      "依存関係をdependenciesに移したのがトリガー。開発サーバの解決順とimportパスが影響していたっぽい、再現手順あり。",
-    author: { name: "guest_user" },
-    createdAt: "2025-09-03T10:05:00+09:00",
-    tags: ["フロントエンド", "Vite", "HMR"],
-    imageUrl: "https://picsum.photos/seed/vitehmr/600/400",
-    likes: 6,
-    comments: 2,
-  },
-  {
-    id: "5",
-    title: "Django × React 構成メモ（SPA配信＆API）",
-    body:
-      "静的配信はNginx、APIはDjango REST Framework。index.html→必要データのみAPIから取得、の一般的構成で落ち着いた。",
-    author: { name: "guest_user" },
-    createdAt: "2025-09-03T18:40:00+09:00",
-    tags: ["Django", "React", "設計"],
-    imageUrl: "https://picsum.photos/seed/djangoreact/600/400",
-    likes: 9,
-    comments: 1,
-  },
-  {
-    id: "6",
-    title: "台湾・香港・ソウル：プラグ形状と変換まとめ",
-    body:
-      "台湾A型、香港G型、韓国は基本C/SE。電圧は100–240V対応の機器なら変圧器不要。マルチ変換プラグを一本化。",
-    author: { name: "guest_user" },
-    createdAt: "2025-09-04T07:20:00+09:00",
-    tags: ["旅行準備", "電源"],
-    imageUrl: "https://picsum.photos/seed/plugmap/600/400",
-    likes: 11,
-    comments: 2,
-  },
-  {
-    id: "7",
-    title: "Airalo eSIM を出国前に動作確認するチェック",
-    body:
-      "モバイル通信プランに表示→回線有効化は現地でON。APN自動設定・ローミングON・優先回線の切替を手順化しておく。",
-    author: { name: "guest_user" },
-    createdAt: "2025-09-04T12:15:00+09:00",
-    tags: ["eSIM", "モバイル"],
-    imageUrl: "https://picsum.photos/seed/airalo/600/400",
-    likes: 7,
-    comments: 0,
-  },
-  {
-    id: "8",
-    title: "AWS SAA 勉強ログ Day 1",
-    body:
-      "VPC/サブネット/IGWの基礎をUdemyで復習。用語は略さず日本語で説明できるように要点をメモ化。",
-    author: { name: "guest_user" },
-    createdAt: "2025-09-04T22:00:00+09:00",
-    tags: ["AWS", "学習"],
-    imageUrl: "https://picsum.photos/seed/awsday1/600/400",
-    likes: 5,
-    comments: 1,
-  },
-  {
-    id: "9",
-    title: "ランニング3日目：つま先が痛い問題",
-    body:
-      "サイズは合っているがトゥボックスが狭いかも。ワイドモデル試す＆着地の癖を動画で確認予定。",
-    author: { name: "guest_user" },
-    createdAt: "2025-09-05T06:45:00+09:00",
-    tags: ["ランニング", "健康"],
-    // 画像なしパターンのUI確認
-    likes: 4,
-    comments: 0,
-  },
-  {
-    id: "10",
-    title: "Notionで海外旅行チェックリスト公開",
-    body:
-      "台湾/香港/韓国の持ち物・事前手続き・当日導線をテンプレに。オンラインチェックインの締切も項目化。",
-    author: { name: "guest_user" },
-    createdAt: "2025-09-05T13:10:00+09:00",
-    tags: ["Notion", "テンプレート", "旅行"],
-    imageUrl: "https://picsum.photos/seed/notiontravel/600/400",
-    likes: 13,
-    comments: 5,
-  },
 ];
 
-function App() {
-  // const [count, setCount] = useState(0)
-
+function Shell() {
   return (
-    <main className="min-h-screen bg-zinc-950 text-zinc-50">
-      <div className="mx-auto max-w-5xl px-4 py-8 space-y-4">
-        {posts.map((p) => (
-          <PostCard key={p.id} post={p} />
-        ))}
+    <div className="min-h-screen bg-zinc-950 text-zinc-50">
+      <div className="mx-auto max-w-7xl">
+        <div className="grid md:grid-cols-[16rem_1fr]">
+          <Sidebar />
+          <main>
+            {/* モバイル用の簡易ヘッダー（必要なら） */}
+            <div className="block md:hidden border-b border-zinc-800 px-4 py-3">
+              <div className="text-lg font-semibold">My SNS</div>
+              <div className="text-xs text-zinc-400">
+                メニューはPC表示でサイドにあります
+              </div>
+            </div>
+            <Outlet />
+          </main>
+        </div>
       </div>
-    </main>
+    </div>
   );
 }
 
-export default App
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route element={<Shell />}>
+          <Route index element={<HomeFeed posts={posts} />} />
+          <Route path="login" element={<LoginPage />} />
+          <Route path="settings">
+            <Route path="profile" element={<ProfileEditPage />} />
+          </Route>
+
+          {/* 404 */}
+          <Route
+            path="*"
+            element={
+              <div className="px-4 py-10">
+                <h1 className="text-2xl font-bold">ページが見つかりません</h1>
+              </div>
+            }
+          />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
+}

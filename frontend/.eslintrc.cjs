@@ -6,7 +6,7 @@ module.exports = {
   parserOptions: {
     ecmaVersion: "latest",
     sourceType: "module",
-    project: ["./tsconfig.json", './tsconfig.node.json'],
+    project: ["./tsconfig.json", "./tsconfig.node.json"],
     tsconfigRootDir: __dirname,
   },
   settings: {
@@ -28,9 +28,13 @@ module.exports = {
     "import/prefer-default-export": "off",
     "react/jsx-props-no-spreading": "off",
     "@typescript-eslint/consistent-type-imports": ["warn", { prefer: "type-imports" }],
-    'import/no-extraneous-dependencies': ['error', {
-      devDependencies: ['vite.config.*', '**/*.config.*', '**/*.test.*', '**/*.spec.*']
+    "import/no-extraneous-dependencies": ["error", {
+      devDependencies: ["vite.config.*", "**/*.config.*", "**/*.test.*", "**/*.spec.*"]
     }],
+   // ここが重要：旧ルールを無効化して誤検知を止める
+   "jsx-a11y/label-has-for": "off",
+   // 「htmlFor でも 入れ子でもOK」にする（ネスト深さは必要に応じて）
+   "jsx-a11y/label-has-associated-control": ["error", { assert: "either", depth: 3 }],
   },
   ignorePatterns: ["dist", "dist-ssr", "node_modules"],
 };
