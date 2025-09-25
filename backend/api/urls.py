@@ -1,16 +1,20 @@
 # api/urls.py
+# SPAアプリ用ルーティング
 from django.urls import path, include
+from django.http import JsonResponse
 from rest_framework.routers import DefaultRouter
-# from .views import PostViewSet, CommentViewSet
+from .views import PostViewSet, TagViewSet
 
 app_name = "api"  # 名前空間（reverse('api:post-detail') などに使える）
 
+def healthz(_request):
+    return JsonResponse({"ok": True})
+
 router = DefaultRouter()
-# router.register(r"posts", PostViewSet, basename="post")
-# router.register(r"comments", CommentViewSet, basename="comment")
+router.register(r"posts", PostViewSet, basename="posts")
+router.register(r"tags", TagViewSet, basename="tags")
 
 urlpatterns = [
-    # path("", include(router.urls)),                # /api/posts/, /api/posts/1/ など
-    # path("auth/login/", ...),                     # 追加の単発エンドポイント
-    # path("schema/", get_schema_view(...)),      # APIドキュメントなど
+    path("healthz/", healthz),
+    path("", include(router.urls)),  # /api/posts/, /api/posts/{id}/ など
 ]

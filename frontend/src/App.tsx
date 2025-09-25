@@ -1,52 +1,68 @@
 import "./App.css";
+import { useEffect } from "react";
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
-import HomeFeed from "./pages/HomeFeed";
+import { HomeFeed, Post } from "./pages/HomeFeed";
 import LoginPage from "./pages/LoginPage";
 import ProfileEditPage from "./pages/ProfileEditPage";
 
+// type Post = {
+//       id: number,
+//       author: { name: string },
+//       title: string,
+//       body: string,
+//       comments: number,
+//       likes: number,
+//       imageUrl: string,
+//       tags: string[],
+//       createdAt: string,
+// }
+
 // 既存の PostCard は HomeFeed 内で使います
 
-const posts = [
-  {
-    id: "1",
-    title: "初めての台北旅行メモ（九份・夜市）",
-    body:
-      "今週の旅ログ。九份は夕暮れ〜夜がいちばん雰囲気良かった。士林夜市の胡椒餅が優勝。次は十分でランタンを…",
-    author: { name: "guest_user" },
-    createdAt: "2025-09-01T12:00:00+09:00",
-    tags: ["旅行", "台湾"],
-    imageUrl: "https://picsum.photos/seed/taipei/600/400",
-    likes: 12,
-    comments: 3,
-  },
-  {
-    id: "2",
-    title: "MacBook Air（M4）充電器は海外対応？",
-    body:
-      "入力100–240V対応なので変圧器は不要。コンセント形状だけ現地に合わせて変換プラグでOKというメモ。",
-    author: { name: "guest_user" },
-    createdAt: "2025-09-02T09:30:00+09:00",
-    tags: ["ガジェット", "旅行準備"],
-    imageUrl: "https://picsum.photos/seed/adapter/600/400",
-    likes: 8,
-    comments: 1,
-  },
-  {
-    id: "3",
-    title: "iPhone 16 Pro と Canon G7X の作例ざっくり比較",
-    body:
-      "日中はiPhoneの計算写真が強い。室内や望遠はやはりセンサーサイズが物を言う。旅行はiPhone単体でも十分かも。",
-    author: { name: "guest_user" },
-    createdAt: "2025-09-02T21:10:00+09:00",
-    tags: ["カメラ", "写真"],
-    imageUrl: "https://picsum.photos/seed/iphonevsg7x/600/400",
-    likes: 15,
-    comments: 4,
-  },
-];
+// let posts = []
+
+// const posts = [
+//   {
+//     id: "1",
+//     title: "初めての台北旅行メモ（九份・夜市）",
+//     body:
+//       "今週の旅ログ。九份は夕暮れ〜夜がいちばん雰囲気良かった。士林夜市の胡椒餅が優勝。次は十分でランタンを…",
+//     author: { name: "guest_user" },
+//     createdAt: "2025-09-01T12:00:00+09:00",
+//     tags: ["旅行", "台湾"],
+//     imageUrl: "https://picsum.photos/seed/taipei/600/400",
+//     likes: 12,
+//     comments: 3,
+//   },
+//   {
+//     id: "2",
+//     title: "MacBook Air（M4）充電器は海外対応？",
+//     body:
+//       "入力100–240V対応なので変圧器は不要。コンセント形状だけ現地に合わせて変換プラグでOKというメモ。",
+//     author: { name: "guest_user" },
+//     createdAt: "2025-09-02T09:30:00+09:00",
+//     tags: ["ガジェット", "旅行準備"],
+//     imageUrl: "https://picsum.photos/seed/adapter/600/400",
+//     likes: 8,
+//     comments: 1,
+//   },
+//   {
+//     id: "3",
+//     title: "iPhone 16 Pro と Canon G7X の作例ざっくり比較",
+//     body:
+//       "日中はiPhoneの計算写真が強い。室内や望遠はやはりセンサーサイズが物を言う。旅行はiPhone単体でも十分かも。",
+//     author: { name: "guest_user" },
+//     createdAt: "2025-09-02T21:10:00+09:00",
+//     tags: ["カメラ", "写真"],
+//     imageUrl: "https://picsum.photos/seed/iphonevsg7x/600/400",
+//     likes: 15,
+//     comments: 4,
+//   },
+// ];
 
 function Shell() {
+
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-50">
       <div className="mx-auto max-w-7xl">
@@ -69,6 +85,19 @@ function Shell() {
 }
 
 export default function App() {
+  let data = null
+    useEffect(() => {
+    (async () => {
+      const res = await fetch("/api/posts/", { credentials: "same-origin" });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      data = await res.json(); // { count, next, previous, results: Post[] }
+
+      console.log("posts:", data);
+    })();
+  }, [])
+
+  const posts: Post[] = data
+
   return (
     <BrowserRouter>
       <Routes>
