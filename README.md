@@ -29,19 +29,33 @@ _収集日: 2025-09-10_
 http://localhost:5173/
 
 ## 開発環境起動
+```
 cd frontend 
 npm run dev
+```
 
+
+```
 cd baekend
 python manage.py runserver
+```
 
 ## python仮想環境起動
+```
 python3 -m venv .venv
 source .venv/bin/activate
+```
 
 ## python仮想環境終了
+```
 deactivate
+```
 
+## djang管理画面起動
+```
+python manage.py runserver
+http://localhost:8000/admin/login/?next=/admin/
+```
 
 
 
