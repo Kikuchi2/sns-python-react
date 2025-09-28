@@ -1,0 +1,13 @@
+# --- OS / 付帯 ---
+.DS_Store
+Thumbs.db
+
+# --- IDE / エディタ ---
+.idea/
+.vscode/
+*.iml
+
+# --- 環境変数/秘密情報 ---
+.env
+.env.*
+!.env.example   # サンプルはコミットする
