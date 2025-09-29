@@ -1,11 +1,23 @@
 from rest_framework import serializers
-from .models import Tag, Post, Member
+from .models import Tag, Post, User
 
-class MemberLiteSerializer(serializers.ModelSerializer):
-    # フロントの author: { name: ... } に合わせる
+class MemberWriteSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Member
-        fields = ("name",)
+        model = User
+        fields = ("id", "username", "email", "display_name")
+
+    # def create(self, validated):
+    #     pwd = validated.pop("password")
+    #     m = Member(**validated) # 辞書のアンパック Member(**validated) は Member(name=..., mail=..., gender=...) と同義
+    #     m.set_password(pwd)
+    #     m.save()
+    #     return m
+
+# class MemberWriteSerializer(serializers.ModelSerializer):
+#     # フロントの author: { name: ... } に合わせる
+#     class Meta:
+#         model = Member
+#         fields = ("name",)
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,7 +26,7 @@ class TagSerializer(serializers.ModelSerializer):
 
 class PostListSerializer(serializers.ModelSerializer):
     # キー名をフロントに合わせて変換
-    author = MemberLiteSerializer(read_only=True)
+    author = MemberWriteSerializer(read_only=True)
     tags = serializers.SlugRelatedField(slug_field="name", many=True, read_only=True)
     createdAt = serializers.DateTimeField(source="created_at", read_only=True)
     imageUrl = serializers.URLField(source="image_url", read_only=True)

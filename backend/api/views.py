@@ -1,9 +1,10 @@
-from rest_framework import viewsets, mixins
+from rest_framework import viewsets, mixins, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from django.db.models import Q
-from .models import Post, Tag
-from .serializers import PostListSerializer, TagSerializer
+from django.db.models import Q, query
+from .models import Post, Tag, User
+from .serializers import MemberWriteSerializer, PostListSerializer, TagSerializer, MemberWriteSerializer
+# from backend.api import serializers
 
 class PostViewSet(mixins.ListModelMixin,
                   mixins.RetrieveModelMixin,
@@ -36,3 +37,20 @@ class TagViewSet(mixins.ListModelMixin,
                  viewsets.GenericViewSet):
     queryset = Tag.objects.all().order_by("name")
     serializer_class = TagSerializer
+
+class MemberViewSet(viewsets.ModelViewSet):
+    # queryset = User.objects.filter(deleted_at__isnull=True).order_by("-id")
+    
+    def get_serializer_class(self):
+        if self.action in ("create", "update", "partial_update"):
+            return MemberWriteSerializer
+
+    def perform_destroy(self, instance):
+        instance.soft_delete() #論理削除
+
+    def create(self, request, *args, **kwargs):
+        in_ser = MemberWriteSerializer(data=request.data)
+        in_ser.is_valid(raise_exception=True)
+        member = in_ser.save()
+        out_ser = MemberWriteSerializer(member)
+        return Response(out_ser. data, status=status.HTTP_201_CREATED)
