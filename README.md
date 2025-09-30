@@ -51,7 +51,7 @@ source .venv/bin/activate
 deactivate
 ```
 
-## djang管理画面起動
+## 開発サーバー起動
 ```
 python manage.py runserver
 http://localhost:8000/admin/login/?next=/admin/
