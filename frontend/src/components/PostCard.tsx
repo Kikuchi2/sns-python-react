@@ -4,7 +4,7 @@ type Post = {
   id: string;
   title: string;
   body: string;
-  author: { name: string; avatarUrl?: string };
+  author: { display_name: string, email: string, id: number, user_name: string};
   createdAt: string | Date;
   tags?: string[];
   imageUrl?: string;
@@ -60,7 +60,7 @@ export function PostCard({ post }: { post: Post }) {
               />
             ) : (
               <div className="h-6 w-6 rounded-full bg-zinc-700 grid place-items-center text-[10px]">
-                {post.author.name.slice(0, 2).toUpperCase()}
+                {post.author.name}
               </div>
             )}
             <span className="text-zinc-300">{post.author.name}</span>
